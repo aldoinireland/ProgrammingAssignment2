@@ -10,19 +10,19 @@
 makeCacheMatrix <- function(x = matrix()) {
     m <- NULL
     ## Store a matrix passed into the function
-    setMatrix <- function(y) {
+    set <- function(y) {
         x <<- y
         m <<- NULL
     }
     ## Get the stored matrix to return
-    getMatrix <- function() x
+    get <- function() x
     ## Store the inverse 
-    setInverseMatrix <- function(solve) m <<- solve
+    setInverse <- function(solve) m <<- solve
     ## Get the stored inverse to return
-    getInverseMatrix <- function() m
-    list(setMatrix = setMatrix, getMatrix = getMatrix,
-         setInverseMatrix = setInverseMatrix,
-         getInverseMatrix = getInverseMatrix)
+    getInverse <- function() m
+    list(set = set, get = get,
+         setInverse = setInverse,
+         getInverse = getInverse)
 }
 
 
@@ -48,8 +48,28 @@ cacheSolve <- function(x, ...) {
     ##  ... derive the inverse ...
     m <- solve(data, ...)
     ##  ... store it ...
-    x$setInverseMatrix(m)
+    x$setInverse(m)
     ##  ... and return it.
     m
 
 }
+
+## Example below for an output
+### Create a matrix
+TEST_1 <- makeCacheMatrix(matrix(1:4,2))
+###Get this result
+TEST_1$get()
+###Get the inverse
+TEST_1$getInverse()
+##reset the matrix
+TEST_1$set(matrix(5:8,2))
+##Get this result
+TEST_1$get()
+##Inital test non cached
+cacheSolve(TEST_1)
+#Return cached results Or it should
+cacheSolve(TEST_1)
+##test the inverse
+TEST_1$getInverse()
+b = TEST_1$getInverse()
+TEST_1$get() %*% b
